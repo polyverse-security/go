@@ -60,6 +60,7 @@ var bootstrapDirs = []string{
 	"cmd/internal/obj/s390x",
 	"cmd/internal/obj/x86",
 	"cmd/internal/src",
+	"cmd/internal/swizzle",
 	"cmd/internal/sys",
 	"cmd/link",
 	"cmd/link/internal/amd64",

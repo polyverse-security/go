@@ -245,6 +245,8 @@ func schedule(f *Func) {
 			}
 
 			// Update use counts of arguments.
+//ROY			for i, _ := range v.Args {
+//ROY				w := v.Args[len(v.Args)-i-1]
 			for _, w := range v.Args {
 				if w.Block != b {
 					continue
