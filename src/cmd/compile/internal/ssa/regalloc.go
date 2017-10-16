@@ -117,7 +117,9 @@ import (
 	"cmd/compile/internal/types"
 	"cmd/internal/objabi"
 	"cmd/internal/src"
+	"cmd/internal/swizzle"
 	"fmt"
+	"math/rand"
 	"unsafe"
 )
 
@@ -181,12 +183,29 @@ func pickReg(r regMask) register {
 	if r == 0 {
 		panic("can't pick a register from an empty set")
 	}
-	for i := register(0); ; i++ {
-		if r&1 != 0 {
-			return i
-		}
-		r >>= 1
-	}
+
+        swizzleDecision := swizzle.Decision(swizzle.SWZL_REG)
+
+        s := noRegister
+        for i, n := register(0), 0; r != 0; i++ {
+                if r&1 != 0 {
+                        if !swizzleDecision {
+                                return i
+                        } else {
+                                n += 1
+                                if rand.Intn(n) == 0 {
+                                        s = i
+                                }
+                        }
+                }
+                r >>= 1
+        }
+
+        if s == noRegister {
+                panic("Swizzle failed to pick a random register")
+        } else {
+                return s
+        }
 }
 
 type use struct {

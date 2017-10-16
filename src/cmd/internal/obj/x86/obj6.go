@@ -34,6 +34,7 @@ import (
 	"cmd/internal/obj"
 	"cmd/internal/objabi"
 	"cmd/internal/sys"
+	"cmd/internal/swizzle"
 	"math"
 	"strings"
 )
@@ -934,6 +935,12 @@ func preprocess(ctxt *obj.Link, cursym *obj.LSym, newprog obj.ProgAlloc) {
 			p.Spadj = -autoffset
 			p = obj.Appendp(p, newprog)
 			p.As = obj.ARET
+
+                        // RES: This could be a NOP, but this works for now
+                        if (swizzle.Decision(swizzle.SWZL_NIAR)) {
+                                p = obj.Appendp(p, newprog)
+                                p.As = obj.ARET
+                        }
 
 			// If there are instructions following
 			// this ARET, they come from a branch
